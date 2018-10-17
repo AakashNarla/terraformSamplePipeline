@@ -5,7 +5,7 @@ pipeline {
         }
     }
 environment {
-        TERRAFORM_CMD = 'docker run --network host  -w /app -v ${HOME}/.aws:/root/.aws -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app hashicorp/terraform:light'
+        TERRAFORM_CMD = 'docker run --network host  -w /app -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app hashicorp/terraform:light'
         ARM_SUBSCRIPTION_ID=credentials('azure_subscription')
         ARM_TENANT_ID=credentials('azure_tenant')
         ARM_CLIENT_ID=credentials('azure_client_id')
@@ -26,6 +26,7 @@ environment {
         }
         stage('init') {
             steps {
+                sh "pwd"
                 sh  "${TERRAFORM_CMD} init -backend=true -input=false"
             }
         }
