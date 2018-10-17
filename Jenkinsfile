@@ -19,11 +19,19 @@ environment {
               checkout scm
             }
         }
-        stage('pull latest light terraform image') {
+        stage('TF Plan') {
             steps {
-                sh  "docker pull hashicorp/terraform:light"
+                container('terraform') {
+                    sh 'terraform init'
+                    sh 'terraform plan -out myplan'
+                }
             }
         }
+        #stage('pull latest light terraform image') {
+         #   steps {
+         #       sh  "docker pull hashicorp/terraform:light"
+         #   }
+        #}
         stage('init') {
             steps {
                 sh "ls -altr"
