@@ -1,10 +1,7 @@
 pipeline {
-    agent {
-        node {
-            label 'master'
-        }
-    }
-environment {
+    agent any
+
+    environment {
         TERRAFORM_CMD = 'docker run --user root --network host  -w /app -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app:z hashicorp/terraform:light'
         ARM_SUBSCRIPTION_ID=credentials('azure_subscription')
         ARM_TENANT_ID=credentials('azure_tenant')
@@ -19,17 +16,13 @@ environment {
               checkout scm
             }
         }
-        stage('TF Plan') {
+            
+        stage('init') {
             steps {
                 container('terraform') {
                     sh 'terraform init'
                     sh 'terraform plan -out myplan'
                 }
-            }
-        }
-       
-        stage('init') {
-            steps {
                 sh "ls -altr"
                 sh "pwd"
                 sh  "${TERRAFORM_CMD} init -backend=true -input=false"
