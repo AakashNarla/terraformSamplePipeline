@@ -26,6 +26,7 @@ environment {
         }
         stage('init') {
             steps {
+                sh "ls -altr"
                 sh "pwd"
                 sh  "${TERRAFORM_CMD} init -backend=true -input=false"
             }
