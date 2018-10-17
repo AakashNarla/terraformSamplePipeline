@@ -41,8 +41,7 @@ pipeline {
         stage('apply') {
             steps {
                 sh  "${TERRAFORM_CMD} apply -lock=false -input=false tfplan"
-
-}
+            }
         }
     }
 }
