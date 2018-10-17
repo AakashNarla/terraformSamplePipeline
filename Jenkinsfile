@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'jenkins-slave' }
 
     environment {
         TERRAFORM_CMD = 'docker run --user root --network host  -w /app -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app:z hashicorp/terraform:light'
