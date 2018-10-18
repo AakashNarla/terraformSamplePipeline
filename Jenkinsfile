@@ -16,9 +16,16 @@ environment {
             }
         }
         
+        stage('pull latest light terraform image') {
+            steps {
+                container('terraform') {
+                    sh 'terraform version'
+                    sh 'ls -altr'
+                }
+            }
+        }
         stage('init') {
             steps {
-                sh  "${TERRAFORM_CMD} version"
                 container('terraform') {
                     sh 'terraform init'
                     sh 'terraform plan -out myplan'
