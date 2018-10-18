@@ -10,13 +10,13 @@ environment {
         TF_VAR_client_secret=credentials('azure_client_secret')
     }
     stages {
-        stage('checkout repo') {
+        stage('Checkout Repo') {
             steps {
               checkout scm
             }
         }
         
-        stage('pull latest light terraform image') {
+        stage('Check for Terraform Version') {
             steps {
                 container('terraform') {
                     sh 'terraform version'
@@ -27,17 +27,16 @@ environment {
         stage('init') {
             steps {
                 container('terraform') {
-                    sh 'terraform init'
-                    sh 'terraform plan -out myplan'
+                    sh 'terraform init -input=false'
+                    sh 'ls -altr'
                 }
-                sh  "${TERRAFORM_CMD} validate ./workspace/terraformSamplePipeline"               
-                sh  "${TERRAFORM_CMD} init -input=false"
-                sh "ls -altr"
             }
         }
         stage('plan') {
             steps {
-                sh  "${TERRAFORM_CMD} plan -out=tfplan -input=false ./terraformDemo"
+                container('terraform') {
+                    sh 'terraform plan -input=false -out myplan'
+                }
                 script {
                   timeout(time: 10, unit: 'MINUTES') {
                     input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
@@ -47,9 +46,10 @@ environment {
         }
         stage('apply') {
             steps {
-                sh  "${TERRAFORM_CMD} apply -lock=false -input=false tfplan"
-
-}
+                container('terraform') {
+                    sh 'terraform plapplyan -lock=false -input=false tfplan'
+                }
+            }
         }
     }
 }
