@@ -39,7 +39,7 @@ environment {
                 }
                 script {
                   timeout(time: 10, unit: 'MINUTES') {
-                    input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+                    input(id: "Deploy Gate", message: "Deploy the script?", ok: 'Deploy')
                   }
                 }
             }
@@ -47,7 +47,7 @@ environment {
         stage('apply') {
             steps {
                 container('terraform') {
-                    sh 'terraform plapplyan -lock=false -input=false tfplan'
+                    sh 'terraform apply -lock=false -input=false tfplan'
                 }
             }
         }
