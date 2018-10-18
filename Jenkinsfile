@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        node {
-            label 'master'
-        }
-    }
+    agent { label 'terraform-slave' }
 environment {
         TERRAFORM_CMD = 'docker run  -u root -v jenkins-home:/tf-k8s-installer:z  --workdir=/tf-k8s-installer hashicorp/terraform:light'
         ARM_SUBSCRIPTION_ID=credentials('azure_subscription')
@@ -20,16 +16,13 @@ environment {
             }
         }
         
-        stage('pull latest light terraform image') {
-            steps {
-                sh  "docker pull hashicorp/terraform:light"
-            }
-        }
         stage('init') {
             steps {
                 sh  "${TERRAFORM_CMD} version"
-                sh "ls -altr"
-                sh  "#${TERRAFORM_CMD} validate ./workspace/terraformDemo" 
+                container('terraform') {
+                    sh 'terraform init'
+                    sh 'terraform plan -out myplan'
+                }
                 sh  "${TERRAFORM_CMD} validate ./workspace/terraformSamplePipeline"               
                 sh  "${TERRAFORM_CMD} init -input=false"
                 sh "ls -altr"
