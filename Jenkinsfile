@@ -2,7 +2,7 @@ pipeline {
     agent { label 'jenkins-slave' }
 
     environment {
-        TERRAFORM_CMD = 'docker run --user root --network host  -w /app -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app:z hashicorp/terraform:light'
+        //TERRAFORM_CMD = 'docker run --user root --network host  -w /app -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app:z hashicorp/terraform:light'
         ARM_SUBSCRIPTION_ID=credentials('azure_subscription')
         ARM_TENANT_ID=credentials('azure_tenant')
         ARM_CLIENT_ID=credentials('azure_client_id')
@@ -19,13 +19,10 @@ pipeline {
             
         stage('init') {
             steps {
-                container('terraform') {
-                    sh 'terraform init'
-                    sh 'terraform plan -out myplan'
-                }
+                
                 sh "ls -altr"
                 sh "pwd"
-                sh  "${TERRAFORM_CMD} init -backend=true -input=false"
+                sh  "terraform init -input=false"
             }
         }
         stage('plan') {
