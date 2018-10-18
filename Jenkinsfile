@@ -29,6 +29,10 @@ environment {
             steps {
                 sh "ls -altr"
                 sh "pwd"
+                sh "cd .."
+                sh "pwd"
+                sh "ls -altr"
+                sh  "${TERRAFORM_CMD}"
                 sh  "${TERRAFORM_CMD} init -backend=true -input=false ./terraformDemo"
             }
         }
