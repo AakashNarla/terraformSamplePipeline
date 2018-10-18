@@ -29,7 +29,7 @@ environment {
             steps {
                 sh  "${TERRAFORM_CMD} version"
                 sh "ls -altr"
-                sh  "${TERRAFORM_CMD} validate ./workspace/terraformDemo" 
+                sh  "#${TERRAFORM_CMD} validate ./workspace/terraformDemo" 
                 sh  "${TERRAFORM_CMD} validate ./workspace/terraformSamplePipeline"               
                 sh  "${TERRAFORM_CMD} init -input=false"
                 sh "ls -altr"
