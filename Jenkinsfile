@@ -45,7 +45,7 @@ environment {
         stage('apply') {
             steps {
                 container('terraform') {
-                    sh 'terraform apply -lock=false -input=false tfplan'
+                    sh 'terraform apply -lock=false -input=false myplan'
                 }
             }
         }
