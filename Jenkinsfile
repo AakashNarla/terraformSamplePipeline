@@ -5,7 +5,7 @@ pipeline {
         }
     }
 environment {
-        TERRAFORM_CMD = 'docker run --user root --network host  -w /app -v ${HOME}/.ssh:/root/.ssh -v /var/jenkins_home/workspace:/app:z hashicorp/terraform:light'
+        TERRAFORM_CMD = 'docker run --rm -it -v `pwd`:/tf-k8s-installer  --workdir=/tf-k8s-installer hashicorp/terraform:light'
         ARM_SUBSCRIPTION_ID=credentials('azure_subscription')
         ARM_TENANT_ID=credentials('azure_tenant')
         ARM_CLIENT_ID=credentials('azure_client_id')
