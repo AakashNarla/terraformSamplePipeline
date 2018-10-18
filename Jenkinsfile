@@ -1,7 +1,6 @@
 pipeline {
     agent { label 'terraform-slave' }
 environment {
-        TERRAFORM_CMD = 'docker run  -u root -v jenkins-home:/tf-k8s-installer:z  --workdir=/tf-k8s-installer hashicorp/terraform:light'
         ARM_SUBSCRIPTION_ID=credentials('azure_subscription')
         ARM_TENANT_ID=credentials('azure_tenant')
         ARM_CLIENT_ID=credentials('azure_client_id')
@@ -20,7 +19,6 @@ environment {
             steps {
                 container('terraform') {
                     sh 'terraform version'
-                    sh 'ls -altr'
                 }
             }
         }

@@ -1,3 +1,6 @@
-provider "azurerm" {
-  ersion = "=1.5.0"
+provider "azurerm" {}
+
+resource "azurerm_resource_group" "aks_demo" {
+  name     = "${var.resource_group_name}"
+  location = "${var.location}"
 }
