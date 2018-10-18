@@ -1,3 +1,3 @@
-provider "azurerm" {
-  #version = "=1.5.0"
+provider "azurem" {
+  ersion = "=1.5.0"
 }

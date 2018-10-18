@@ -5,7 +5,7 @@ pipeline {
         }
     }
 environment {
-        TERRAFORM_CMD = 'docker run  -v `pwd`:/tf-k8s-installer  --workdir=/tf-k8s-installer hashicorp/terraform:light'
+        TERRAFORM_CMD = 'docker run  -u root -v `pwd`:/tf-k8s-installer:z  --workdir=/tf-k8s-installer hashicorp/terraform:light'
         ARM_SUBSCRIPTION_ID=credentials('azure_subscription')
         ARM_TENANT_ID=credentials('azure_tenant')
         ARM_CLIENT_ID=credentials('azure_client_id')
@@ -27,10 +27,10 @@ environment {
         }
         stage('init') {
             steps {
+                sh  "${TERRAFORM_CMD} version"
                 sh "ls -altr"
-                sh "pwd"                
-                sh "echo ${TERRAFORM_CMD}"
-                sh  "${TERRAFORM_CMD} init -backend=true -input=false"
+                sh  "${TERRAFORM_CMD} validate"               
+                sh  "${TERRAFORM_CMD} init -input=false"
                 sh "ls -altr"
             }
         }
