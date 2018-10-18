@@ -28,10 +28,10 @@ environment {
         stage('init') {
             steps {
                 sh "ls -altr"
-                sh "pwd"
-                sh "ls -altr"
+                sh "pwd"                
                 sh "echo ${TERRAFORM_CMD}"
                 sh  "${TERRAFORM_CMD} init -backend=true -input=false ./terraformDemo"
+                sh "ls -altr"
             }
         }
         stage('plan') {
