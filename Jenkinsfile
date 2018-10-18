@@ -1,8 +1,11 @@
 pipeline {
-    agent any
-
-    environment {
-        //TERRAFORM_CMD = 'docker run --user root --network host  -w /app -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app:z hashicorp/terraform:light'
+    agent {
+        node {
+            label 'master'
+        }
+    }
+environment {
+        TERRAFORM_CMD = 'docker run --user root --network host  -w /app -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app:z hashicorp/terraform:light'
         ARM_SUBSCRIPTION_ID=credentials('azure_subscription')
         ARM_TENANT_ID=credentials('azure_tenant')
         ARM_CLIENT_ID=credentials('azure_client_id')
@@ -16,18 +19,22 @@ pipeline {
               checkout scm
             }
         }
-            
+        
+        stage('pull latest light terraform image') {
+            steps {
+                sh  "docker pull hashicorp/terraform:light"
+            }
+        }
         stage('init') {
             steps {
-                
                 sh "ls -altr"
                 sh "pwd"
-                sh  "terraform init -input=false"
+                sh  "${TERRAFORM_CMD} init -backend=true -input=false ./terraformDemo"
             }
         }
         stage('plan') {
             steps {
-                sh  "${TERRAFORM_CMD} plan -out=tfplan -input=false"
+                sh  "${TERRAFORM_CMD} plan -out=tfplan -input=false ./terraformDemo"
                 script {
                   timeout(time: 10, unit: 'MINUTES') {
                     input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
@@ -38,7 +45,8 @@ pipeline {
         stage('apply') {
             steps {
                 sh  "${TERRAFORM_CMD} apply -lock=false -input=false tfplan"
-            }
+
+}
         }
     }
 }
